@@ -152,7 +152,7 @@ void queuesize(int *count)
 void* Customer(void *custID)
 {
 	int custVal, theaterVal;
-	sem_getvalue(&theaterOpen, &theaterVal);
+	/*sem_getvalue(&theaterOpen, &theaterVal);
 	if(theaterVal == 4)
 	{
 		sem_wait(&theaterOpen);		//Decrement theaterOpen semaphore so no other customers come in.
@@ -172,21 +172,20 @@ void* Customer(void *custID)
 	else
 	{
 		sem_wait(&custsem[(int) custID]);	//Block Customers until theater is open
-	}
+	}*/
 	printf("Customer %d created\n", (int) custID);
 	pthread_exit(NULL);	
 }
 
 /****************************************************
- * Description: This function initializes
- * a sempahore to a given value indicated by the val
- * paramter
+ * Description: BoxOfficeAgent thread function to
+ * execute the actions of a box office agent as it goes
+ * through the theater simulation
  *
- * Parameters: *sem - semaphore to initialize
- *             val - value to init *sem to
+ * Parameters: *agentID - ID or thread of box office
+ * agent
  *
- * Return: error if sem_init fails or nothing if
- * success
+ * Return: pthread_exit(NULL)
  ***************************************************/
 void* BoxOfficeAgent(void *agentID)
 {
@@ -196,15 +195,13 @@ void* BoxOfficeAgent(void *agentID)
 }
 
 /****************************************************
- * Description: This function initializes
- * a sempahore to a given value indicated by the val
- * paramter
+ * Description: TicketTaker thread function to execute
+ * the actions of a ticket taker as it goes through the
+ * theater simulation
  *
- * Parameters: *sem - semaphore to initialize
- *             val - value to init *sem to
+ * Parameters: *takerID - ID or thread of ticket taker
  *
- * Return: error if sem_init fails or nothing if
- * success
+ * Return: pthread_exit(NULL)
  ***************************************************/
 void* TicketTaker(void *takerID)
 {
@@ -214,15 +211,14 @@ void* TicketTaker(void *takerID)
 }
 
 /****************************************************
- * Description: This function initializes
- * a sempahore to a given value indicated by the val
- * paramter
+ * Description: ConcessionStandWorker thread function
+ * to execute the actions of a concession stand worker
+ * as it goes throught the theater simulation
  *
- * Parameters: *sem - semaphore to initialize
- *             val - value to init *sem to
+ * Parameters: *workerID - ID or thread of the 
+ * concession stand worker
  *
- * Return: error if sem_init fails or nothing if
- * success
+ * Return: pthread_exit(NULL)
  ***************************************************/
 void* ConcessionStandWorker(void *workerID)
 {
@@ -234,9 +230,8 @@ void* ConcessionStandWorker(void *workerID)
 /********* Functions *********/
 
 /****************************************************
- * Description: This function initializes
- * a sempahore to a given value indicated by the val
- * paramter
+ * Description:initializes a sempahore to a given value 
+ * indicated by the val parameter
  *
  * Parameters: *sem - semaphore to initialize
  *             val - value to init *sem to
@@ -319,7 +314,8 @@ void parseFile(FILE **file, char ***movieTitles, int **ticketCount)
 		{
 			if (tokenCounter % 2 == 0)
 			{
-				strcpy((*movieTitles)[i], token);
+				strcpy((*movieTitles)[i], token); //Must copys string because equals operator
+				                                  //creates one pointer to token for every element in movieTitles.
 				i++;
 			}
 			else
@@ -346,15 +342,23 @@ void parseFile(FILE **file, char ***movieTitles, int **ticketCount)
 				/* If we got here, strtol successfully parsed a number */
 				j++;
 			}
-
 			tokenCounter++;
 			token = strtok(NULL, delim);
 		}
 	}
 
+
 	/* free dynamic memory */
+	if (token)
+	{
+		free(token);
+		token = NULL;
+	}
 	if (line)
+	{
 		free(line);
+		line = NULL;
+	}
 }
 
 /********* Beginning main function *********/
@@ -364,7 +368,7 @@ int main(int argc, char **argv)
 	int rc; 	//Error checker for threads
 	void *status; 	//Status of joins
 	FILE *file;	//Pointer to movies.txt file
-	char **movieTitles = (char **) malloc(DEF_ARR_S*sizeof(char)); //Char ** to hold movie titles
+	char **movieTitles = (char **) malloc(DEF_ARR_S*sizeof(char *)); //Char ** to hold movie titles
 	int *ticketCount = (int *) malloc (DEF_ARR_S*sizeof(int)); //int * to hold ticket counts to movie titles.
 
 	pthread_t agents[MAX_AGENTS];		// Box Office Agents threads
@@ -389,7 +393,6 @@ int main(int argc, char **argv)
 	}
 	openFile(&file); //Now open and parse file
 	parseFile(&file, &movieTitles, &ticketCount);
-	
 
 	/* First create BoxOfficeAgentsm TickerTaker, and ConcessionStandWorker threads 
 	 * I would create a function for this procedure, but passing a function name as
@@ -416,7 +419,8 @@ int main(int argc, char **argv)
 	{
 		rc = pthread_create(&customers[i], NULL, Customer, (void *) i);
 		checkThreadError(&rc);
-	}	
+	}
+
 	/* Join all customer threads */
 	for (i = 0; i < MAX_CUSTOMERS; i++)
 	{
@@ -424,14 +428,30 @@ int main(int argc, char **argv)
 		checkThreadError(&rc);
 		printf("Customer %d joined with status %d\n", i, (int) status);
 	}
+
+	/* Technically we should join all threads since a thread is an allocated resource
+	 * and must be freed. There are possible memory leaks in this program
+	 * due to project specification allowing main to only join customer threads */
 	
-	/* free dynamic memory */
+	/* free dynamic memory */ 
 	for (i = 0; i < DEF_ARR_S; i++)
 	{
-		free(movieTitles[i]);
+		if (movieTitles[i])
+		{
+			free(movieTitles[i]);
+			movieTitles[i] = NULL;
+		}
 	}
-	free(movieTitles);
-	free(ticketCount);
+	if (movieTitles)
+	{
+		free(movieTitles);
+		movieTitles = NULL;
+	}
+	if (ticketCount);
+	{
+		free(ticketCount);
+		ticketCount = NULL;
+	}
 
 	/* Exit main thread */
 	pthread_exit(NULL);
