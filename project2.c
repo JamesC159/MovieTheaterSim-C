@@ -16,9 +16,11 @@
 #define DEF_ARR_S 50
 
 /********* Global Semaphores *********/
-sem_t asem;
-sem_t tsem;
-sem_t csem;
+sem_t createdAgent;
+sem_t createdTaker;
+sem_t asem[MAX_CUSTOMERS];
+sem_t tsem[MAX_CUSTOMERS];
+sem_t wsem[MAX_CUSTOMERS];
 sem_t custsem[MAX_CUSTOMERS];
 sem_t theaterOpen;
 
@@ -34,6 +36,9 @@ struct semNode *concessionFront = NULL;
 struct semNode *concessionBack = NULL;
 int ticketCount = 0;
 int concessionCount = 0;
+
+/******** Global Variables *********/
+int isTheaterOpen = 0;
 
 /********* Queue Functions *********/
 
@@ -152,27 +157,18 @@ void queuesize(int *count)
 void* Customer(void *custID)
 {
 	int custVal, theaterVal;
-	/*sem_getvalue(&theaterOpen, &theaterVal);
-	if(theaterVal == 4)
+
+	/* Wait for the theater to be open, the first customer who sees that it is
+	 * open will output that it is open. Afterwards, it will signal to the next
+	 * blocked customer that the theater is now open */
+	sem_wait(&theaterOpen);
+	if (!isTheaterOpen)
 	{
-		sem_wait(&theaterOpen);		//Decrement theaterOpen semaphore so no other customers come in.
-		printf("Theater is now open!\n");
-		int i;
-		
-		// Alert all customers who are blocked that the theater is now open
-		for (i = 0; i < MAX_CUSTOMERS; i++)
-		{
-			sem_getvalue(&custsem[i], &custVal);
-			if (custVal == -1)
-			{
-				sem_post(&custsem[i]);
-			}
-		}
+		isTheaterOpen = 1;
+		printf("The theater is now open!\n");
 	}
-	else
-	{
-		sem_wait(&custsem[(int) custID]);	//Block Customers until theater is open
-	}*/
+	sem_post(&theaterOpen);
+	
 	printf("Customer %d created\n", (int) custID);
 	pthread_exit(NULL);	
 }
@@ -189,8 +185,10 @@ void* Customer(void *custID)
  ***************************************************/
 void* BoxOfficeAgent(void *agentID)
 {
+	/* Agents are created frst therefore, they do not need
+	 * to wait on anyone to be created */
 	printf("Box office agent %d created\n", (int) agentID);
-	sem_post(&theaterOpen);
+	sem_post(&createdAgent);
 	pthread_exit(NULL);
 }
 
@@ -205,8 +203,11 @@ void* BoxOfficeAgent(void *agentID)
  ***************************************************/
 void* TicketTaker(void *takerID)
 {
+	/* The ticket taker will wait for the agents to be created
+	 * and then will signal that he has been created */
+	sem_wait(&createdAgent);
 	printf("Ticket taker %d created\n", (int) takerID);
-	sem_post(&theaterOpen);
+	sem_post(&createdTaker);
 	pthread_exit(NULL);
 }
 
@@ -222,6 +223,9 @@ void* TicketTaker(void *takerID)
  ***************************************************/
 void* ConcessionStandWorker(void *workerID)
 {
+	/* The worker will wait for the taker to be created 
+	 * and then signal that the theater is now open for customers */
+	sem_wait(&createdTaker);
 	printf("Concession stand worker %d created\n", (int) workerID);
 	sem_post(&theaterOpen);
 	pthread_exit(NULL);
@@ -378,13 +382,24 @@ int main(int argc, char **argv)
 
 	/* Initialize all semaphores */
 	initSems(&theaterOpen, 0);
-//	initSems(&tsem, MAX_TAKERS);
-//	initSems(&csem, MAX_WORKERS);
-//	initSems(&asem, MAX_AGENTS);
+	initSems(&createdAgent, 0);
+	initSems(&createdTaker, 0);
 	for (i = 0; i < MAX_CUSTOMERS; i++)
 	{
 		initSems(&custsem[i], 0);	
 	}
+	/*for (i = 0; i < MAX_CUSTOMERS; i++)
+	{
+		initSems(&asem[i], 0);	
+	}
+	for (i = 0; i < MAX_CUSTOMERS; i++)
+	{
+		initSems(&wsem[i], 0);	
+	}
+	for (i = 0; i < MAX_CUSTOMERS; i++)
+	{
+		initSems(&tsem[i], 0);	
+	}*/
 
  	/* Parse movies.txt file to figure out the movie theater titles and ticket counts */	
 	for (i = 0; i < DEF_ARR_S; i++) //First allocate space for array of pointers
