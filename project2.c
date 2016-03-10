@@ -18,10 +18,6 @@
 /********* Global Semaphores *********/
 sem_t createdAgent;
 sem_t createdTaker;
-sem_t asem[MAX_CUSTOMERS];
-sem_t tsem[MAX_CUSTOMERS];
-sem_t wsem[MAX_CUSTOMERS];
-sem_t custsem[MAX_CUSTOMERS];
 sem_t theaterOpen;
 
 /********* Semeaphore Queues *********/
@@ -156,8 +152,6 @@ void queuesize(int *count)
  ***************************************************/
 void* Customer(void *custID)
 {
-	int custVal, theaterVal;
-
 	/* Wait for the theater to be open, the first customer who sees that it is
 	 * open will output that it is open. Afterwards, it will signal to the next
 	 * blocked customer that the theater is now open */
@@ -384,22 +378,6 @@ int main(int argc, char **argv)
 	initSems(&theaterOpen, 0);
 	initSems(&createdAgent, 0);
 	initSems(&createdTaker, 0);
-	for (i = 0; i < MAX_CUSTOMERS; i++)
-	{
-		initSems(&custsem[i], 0);	
-	}
-	/*for (i = 0; i < MAX_CUSTOMERS; i++)
-	{
-		initSems(&asem[i], 0);	
-	}
-	for (i = 0; i < MAX_CUSTOMERS; i++)
-	{
-		initSems(&wsem[i], 0);	
-	}
-	for (i = 0; i < MAX_CUSTOMERS; i++)
-	{
-		initSems(&tsem[i], 0);	
-	}*/
 
  	/* Parse movies.txt file to figure out the movie theater titles and ticket counts */	
 	for (i = 0; i < DEF_ARR_S; i++) //First allocate space for array of pointers
