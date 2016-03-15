@@ -16,25 +16,36 @@
 #define DEF_ARR_S 50
 
 /********* Global Semaphores *********/
-sem_t createdAgent;
-sem_t createdTaker;
-sem_t theaterOpen;
+sem_t createdAgent; //Semaphore for agent creation
+sem_t createdTaker; //Semaphore for ticket taker creaton
+sem_t theaterOpen;  //Semaphore to signal that the theater has opened
+sem_t boughtTicket[MAX_CUSTOMERS]; //Semaphore to signal that a customer has boguht a movie
+sem_t ticketOrdered; //Semphore to signal that the customer has ordered a movie ticket
+sem_t queueMutex1;
+sem_t agentCoord;
 
 /********* Semeaphore Queues *********/
-struct semNode
+
+struct agentNode //This queue represents the line for the customers at the box office
 {
-	sem_t sem;
-	struct semNode *next;
+	int ID;
+	char *movieTitle;
+	struct agentNode *next;
 };
-struct semNode *ticketFront = NULL;
-struct semNode *ticketBack = NULL;
-struct semNode *concessionFront = NULL;
-struct semNode *concessionBack = NULL;
-int ticketCount = 0;
-int concessionCount = 0;
+struct agentNode *agentFront = NULL;
+struct agentNode *agentBack = NULL;
+int agentCount = 0;
 
 /******** Global Variables *********/
-int isTheaterOpen = 0;
+
+int isTheaterOpen = 0;	//Used to signal if the theater is ready for business
+int movieCounter = 0;	//Counts the number of movies read from movies.txt
+char **movieTitles; 	//Char ** to hold movie titles
+int *ticketCount; 	//int * to hold ticket counts to movie titles.
+int randIdx;
+int indexes[MAX_CUSTOMERS]; //Array to respresent each customer and the movie that they bought.
+int shouldExit[MAX_CUSTOMERS] = {0}; //Array to signal if a customer should go home if the movie
+				     //is sold out.
 
 /********* Queue Functions *********/
 
@@ -42,49 +53,46 @@ int isTheaterOpen = 0;
  * Description: enqueue places a semaphore into the
  * queue represented by a linked list of Nodes
  *
- * Parameters: *data - semaphore to place in the queue
- *             *count - number of elements in the queue
- *             **back - pointer to back of queue
- *             **front - pointer to front of queue
- *
+ * Parameters: ID - ID of agent
+ *	       *title = title of movie the agent
+ *	                is trying to order
  * Return: nothing
  ***************************************************/
-void enqueueSem(sem_t *data, int *count, struct semNode **back, struct semNode **front)
+void enqueueAgent(int ID, char *title)
 {
-	if (*back == NULL)
+	if (agentBack == NULL)
 	{
-		*back  = (struct semNode*) malloc(1*sizeof(struct semNode));
-		(*back)->next = NULL;
-		(*back)->sem = *data;
-		*front = *back;
+		agentBack = (struct agentNode*) malloc(1*sizeof(struct agentNode));
+		agentBack->next = NULL;
+		agentBack->ID = ID;
+	 	agentBack->movieTitle = title;
+		agentFront = agentBack;
 	}
 	else
 	{
-		struct semNode *temp = (struct semNode*) malloc(1*sizeof(struct semNode));
-		(*back)->next = temp;
-		temp->sem = *data;
+		struct agentNode *temp = (struct agentNode*) malloc(1*sizeof(struct agentNode));
+		agentBack->next = temp;
+		temp->ID = ID;
+		temp->movieTitle = title;
 		temp->next = NULL;
-		*back = temp;
+		agentBack = temp;
 	}
 
-	(*count)++;
+	agentCount++;
 }
 
 /****************************************************
  * Description: removes an element from the front of
  * the queue and updated the pointers accordingly
  *
- * Parameters: *count - number of elements in the queue
- *             **back - back of queue
- *             **front - front of queue
- *
  * Return: error if trying to remove from empty queue
  * or nothing
  ***************************************************/
-void dequeue(int *count, struct semNode **back, struct semNode **front)
+int dequeueAgent(char **title)
 {
-	struct semNode *tempFront = (struct semNode*) malloc(1*sizeof(struct semNode));
-	tempFront = *front;
+	int id;
+	struct agentNode *tempFront = (struct agentNode*) malloc(1*sizeof(struct agentNode));
+	tempFront = agentFront;
 
 	if (tempFront == NULL)
 	{
@@ -95,50 +103,52 @@ void dequeue(int *count, struct semNode **back, struct semNode **front)
 	{
 		if (tempFront->next != NULL)
 		{
-			tempFront = tempFront->next;
-			free(*front);
-			*front = tempFront;
+			*title = agentFront->movieTitle;
+			id = agentFront->ID;
+			tempFront = agentFront->next;
+			free(agentFront);
+			agentFront = tempFront;
+
 		}
 		else
 		{
-			free(*front);
-			*front = NULL;
-			*back = NULL;
+			*title = agentFront->movieTitle;
+			id = agentFront->ID;
+			free(agentFront);
+			agentFront = NULL;
+			agentBack = NULL;
 		}
-		(*count)--;
+		agentCount--;
+	}
+
+	return id;
+}
+
+/********* Thread Helper Functions *********/
+
+char* purchase(int custID)
+{
+	char *title = NULL;
+	randIdx = rand() % (movieCounter - 1);
+	indexes[custID] = randIdx;
+	title = movieTitles[randIdx];
+	return title;
+}
+
+void sellTicket(int agentID, char *title, int id)
+{
+	sleep(90/60); //Sleep for 90/60 seconds to sell the ticket witht time constraints
+	if (ticketCount[indexes[id]] > 0)
+	{
+		printf("Box office agent %d sold ticket for %s to customer %d\n", agentID, title, id);
+		(ticketCount[indexes[id]])--;
+	}
+	else
+	{
+		printf("Movie %s is sold out.\n", title);
+		shouldExit[id] = 1;
 	}
 }
-
-/****************************************************
- * Description: empty checks to see if the queue
- * is empty or not and prints the result
- *
- * Parameters: **back - back of queue
- *             **front - front of queue
- *
- * Return: nothing
- ***************************************************/
-void empty(struct semNode **back, struct semNode **front)
-{
-	if (*back == NULL && *front == NULL)
-		printf("Queue is empty\n");
-	else
-		printf("Queue is not empty\n");
-}
-
-/****************************************************
- * Description: outputs the number of elements in the
- * queue
- *
- * Parameters: *count - number of elements int the queue
- *
- * Return: nothing
- ***************************************************/
-void queuesize(int *count)
-{
-	printf("Queue size is %d\n", *count);
-}
-
 /********* Thread Functions - Comments need to be updated *********/
 
 /****************************************************
@@ -156,14 +166,33 @@ void* Customer(void *custID)
 	 * open will output that it is open. Afterwards, it will signal to the next
 	 * blocked customer that the theater is now open */
 	sem_wait(&theaterOpen);
+	
 	if (!isTheaterOpen)
 	{
 		isTheaterOpen = 1;
 		printf("The theater is now open!\n");
 	}
-	sem_post(&theaterOpen);
 	
-	printf("Customer %d created\n", (int) custID);
+	sem_post(&theaterOpen);	
+	
+	char *title = purchase((int) custID);
+	printf("Customer %d created, buying ticket to %s\n", (int) custID, title);
+
+	/* Enqueue the customer so that he may communicate to the box office agent
+	 * the information of his movie and his ID */
+	sem_wait(&queueMutex1);
+	enqueueAgent((int) custID, title);//Enqueue the customer ID to communicate to the agent
+	                                  //That the customer is ordering tickets.
+	sem_post(&ticketOrdered);	  //Tell the box office agent that the customer has bought a ticket
+	sem_post(&queueMutex1);
+	
+	sem_wait(&boughtTicket[(int) custID]); //Wait for the agent to signal that the ticket has been bought.
+	if (shouldExit[(int) custID])	   //Check to see if the ticket was sold out.
+	{
+		printf("Customer %d is going home.\n", (int) custID);
+		pthread_exit(NULL);
+	}
+
 	pthread_exit(NULL);	
 }
 
@@ -179,10 +208,32 @@ void* Customer(void *custID)
  ***************************************************/
 void* BoxOfficeAgent(void *agentID)
 {
+	int i = 0; //Loop counter
+
 	/* Agents are created frst therefore, they do not need
 	 * to wait on anyone to be created */
 	printf("Box office agent %d created\n", (int) agentID);
 	sem_post(&createdAgent);
+
+	while(1)
+	{
+		/* Once a ticket has been ordered, let the box office agent serve the customer */
+		sem_wait(&ticketOrdered);
+		
+		sem_wait(&queueMutex1);
+		char *title;
+		int id = dequeueAgent(&title); //Dequeue customer to receive his id
+		sem_post(&queueMutex1);
+		
+		/* Allow 2 agents to sell tickets at once */
+		sem_wait(&agentCoord);
+		printf("Box office agent %d serving customer %d\n", (int) agentID, id);
+		sellTicket((int) agentID, title, id); //Sell a ticket
+
+		sem_post(&agentCoord); //Let the next agent know he can sell the next ticket
+		sem_post(&boughtTicket[id]); //Signal to the agent that he has been processed.
+	}
+
 	pthread_exit(NULL);
 }
 
@@ -307,6 +358,7 @@ void parseFile(FILE **file, char ***movieTitles, int **ticketCount)
 
 	while((read = getline(&line, &numBytes, *file)) != -1) 
 	{
+		movieCounter++; //One line cooresponds to one movie
 		token = strtok(line, delim);
 		while(token != NULL)
 		{
@@ -366,8 +418,8 @@ int main(int argc, char **argv)
 	int rc; 	//Error checker for threads
 	void *status; 	//Status of joins
 	FILE *file;	//Pointer to movies.txt file
-	char **movieTitles = (char **) malloc(DEF_ARR_S*sizeof(char *)); //Char ** to hold movie titles
-	int *ticketCount = (int *) malloc (DEF_ARR_S*sizeof(int)); //int * to hold ticket counts to movie titles.
+	movieTitles = (char **) malloc(DEF_ARR_S*sizeof(char *)); 
+	ticketCount = (int *) malloc (DEF_ARR_S*sizeof(int));
 
 	pthread_t agents[MAX_AGENTS];		// Box Office Agents threads
 	pthread_t customers[MAX_CUSTOMERS];	// Customers threads
@@ -378,12 +430,22 @@ int main(int argc, char **argv)
 	initSems(&theaterOpen, 0);
 	initSems(&createdAgent, 0);
 	initSems(&createdTaker, 0);
+	initSems(&ticketOrdered, 0);
+	initSems(&queueMutex1, 1);
+	initSems(&agentCoord, 2);
+	for (i = 0; i < MAX_CUSTOMERS; i++)
+	{
+		initSems(&boughtTicket[i], 0);
+	}
+
+	srand(time(NULL));  		//Seed random number generator
 
  	/* Parse movies.txt file to figure out the movie theater titles and ticket counts */	
 	for (i = 0; i < DEF_ARR_S; i++) //First allocate space for array of pointers
 	{
 		movieTitles[i] = (char*) malloc(DEF_ARR_S*sizeof(char));
 	}
+	
 	openFile(&file); //Now open and parse file
 	parseFile(&file, &movieTitles, &ticketCount);
 
@@ -422,10 +484,6 @@ int main(int argc, char **argv)
 		printf("Customer %d joined with status %d\n", i, (int) status);
 	}
 
-	/* Technically we should join all threads since a thread is an allocated resource
-	 * and must be freed. There are possible memory leaks in this program
-	 * due to project specification allowing main to only join customer threads */
-	
 	/* free dynamic memory */ 
 	for (i = 0; i < DEF_ARR_S; i++)
 	{
@@ -447,6 +505,6 @@ int main(int argc, char **argv)
 	}
 
 	/* Exit main thread */
-	pthread_exit(NULL);
+	exit(0);
 
 } /********* End main function *********/
