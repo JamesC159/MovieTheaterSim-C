@@ -21,14 +21,17 @@
 sem_t createdAgent; //Semaphore for agent creation
 sem_t createdTaker; //Semaphore for ticket taker creaton
 sem_t theaterOpen;  //Semaphore to signal that the theater has opened
-sem_t boughtTicket[MAX_CUSTOMERS]; //Semaphore to signal that a customer has boguht a movie
-sem_t toreTicket[MAX_CUSTOMERS];
-sem_t orderTaken[MAX_CUSTOMERS];
-sem_t ticketOrdered; //Semphore to signal that the customer has ordered a movie ticket
-sem_t fOrderReady;
-sem_t aMutex, tMutex, sMutex;
-sem_t agentCoord;
-sem_t ticketReady;
+sem_t boughtTicket[MAX_CUSTOMERS]; 	//Array of semaphores to signal that a customer has bought
+									//a movie
+sem_t toreTicket[MAX_CUSTOMERS];	//Array of semaphores to signal that the ticket taker
+									//has taken a customer's ticket and tore it
+sem_t orderTaken[MAX_CUSTOMERS];	//Array of semaphores to signal that the concession
+									//stand worker has taken a customers order and filled it
+sem_t ticketOrdered; 	//Semphore to signal that the customer has ordered a movie ticket
+sem_t fOrderReady;		//Semaphore to signal that a customer has ordered food
+sem_t aMutex, tMutex, sMutex;	//Mutexes for queues
+sem_t agentCoord;		//Semaphore to coordinate the 2 box office agents in parallel
+sem_t ticketReady;		//Semaphore to signal that ticket is ready to tear
 
 /********* Semeaphore Queues *********/
 
@@ -287,7 +290,6 @@ int dequeueStand(char **food)
 			tempFront = sFront->next;
 			free(sFront);
 			sFront = tempFront;
-
 		}
 		else
 		{
@@ -300,6 +302,7 @@ int dequeueStand(char **food)
 
 	return id;
 }
+
 
 /********* Thread Helper Functions *********/
 
@@ -855,7 +858,13 @@ int main(int argc, char **argv)
 		free(ticketCount);
 		ticketCount = NULL;
 	}
-
+	
+	/* Valgrind is telling me that my dequeue functions are giving me memory leaks
+		even though that the program completes successfully and seems to dequeue
+		correctly. The correct output depends on successful enqueue and dequeue 
+		functions. All customers must be dequeued in order to complete all 50
+		customers simulation through the movie theater */
+	
 	/* Exit main thread */
 	exit(0);
 
