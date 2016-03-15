@@ -9,13 +9,13 @@
 #include <unistd.h>
 #include <limits.h>
 
+/* Global constants as preprocessor text replacement */
 #define MAX_CUSTOMERS 50
 #define MAX_AGENTS 2
 #define MAX_TAKERS 1
 #define MAX_WORKERS 1
 #define DEF_ARR_S 50
-#define NUM_ITEMS 4
-#define ITEM_SIZE 35
+#define NUM_ITEMS 3
 
 /********* Global Semaphores *********/
 sem_t createdAgent; //Semaphore for agent creation
@@ -34,7 +34,6 @@ sem_t agentCoord;		//Semaphore to coordinate the 2 box office agents in parallel
 sem_t ticketReady;		//Semaphore to signal that ticket is ready to tear
 
 /********* Semeaphore Queues *********/
-
 struct agentNode //This queue represents the line for the customers at the box office
 {
 	int ID;
@@ -65,7 +64,6 @@ struct standNode *sBack = NULL;
 int sCount = 0;
 
 /******** Global Variables *********/
-
 int isTheaterOpen = 0;	//Used to signal if the theater is ready for business
 int movieCounter = 0;	//Counts the number of movies read from movies.txt
 char **movieTitles; 	//Char ** to hold movie titles
@@ -387,22 +385,12 @@ char* enterCStand(int id)
 		}
 		case 1:
 		{
-			food = "Candy";
+			food = "Soda";
 			break;
 		}
 		case 2:
 		{
-			food = "Hotdog";
-			break;
-		}
-		case 3:
-		{
-			food = "Burger";
-			break;
-		}
-		case 4:
-		{
-			food = "Cornydog";
+			food = "Popcorn and Soda";
 			break;
 		}
 	}
@@ -672,11 +660,11 @@ void initAllSems()
  *
  * Return: error if pthread_create fails or nothing
  ***************************************************/
-void checkThreadError(int *rc)
+void checkThreadError(int rc)
 {
-	if (*rc)
+	if (rc)
 	{
-		printf("ERROR: pthread_create returned %d\n", *rc);
+		printf("ERROR: pthread_create returned %d\n", rc);
 		exit(1);
 	}
 }
@@ -806,36 +794,34 @@ int main(int argc, char **argv)
 	openFile(&file); //Now open and parse file
 	parseFile(&file, &movieTitles, &ticketCount);
 
-	/* First create BoxOfficeAgentsm TickerTaker, and ConcessionStandWorker threads 
-	 * I would create a function for this procedure, but have been lazy */
+	/* First create customer threads, then create employee threads 
+	 * I would create functions for these procedures, but have been lazy */
+	 	for (i = 0; i < MAX_CUSTOMERS; i++)
+	{
+		rc = pthread_create(&customers[i], NULL, Customer, (void *) i);
+		checkThreadError(rc);
+	}
 	for (i = 0; i < MAX_AGENTS; i++)
 	{
 		rc = pthread_create(&agents[i], NULL, BoxOfficeAgent, (void *) i);
-		checkThreadError(&rc);
+		checkThreadError(rc);
 	}
 	for (i = 0; i < MAX_TAKERS; i++)
 	{
 		rc = pthread_create(&ticketTakers[i], NULL, TicketTaker, (void *) i);
-		checkThreadError(&rc);
+		checkThreadError(rc);
 	}
 	for (i = 0; i < MAX_WORKERS; i++)
 	{
 		rc = pthread_create(&workers[i], NULL, ConcessionStandWorker, (void *) i);
-		checkThreadError(&rc);
-	}
-
-	/* Create customer threads */
-	for (i = 0; i < MAX_CUSTOMERS; i++)
-	{
-		rc = pthread_create(&customers[i], NULL, Customer, (void *) i);
-		checkThreadError(&rc);
+		checkThreadError(rc);
 	}
 
 	/* Join all customer threads */
 	for (i = 0; i < MAX_CUSTOMERS; i++)
 	{
 		rc = pthread_join(customers[i], &status);
-		checkThreadError(&rc);
+		checkThreadError(rc);
 		printf("Customer %d joined with status %d\n", i, (int) status);
 	}
 
