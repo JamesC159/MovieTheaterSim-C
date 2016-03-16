@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <limits.h>
 
-/* Global constants as preprocessor text replacement */
+/********* Global Constants ********/
 #define MAX_CUSTOMERS 50
 #define MAX_AGENTS 2
 #define MAX_TAKERS 1
@@ -34,6 +34,7 @@ sem_t agentCoord;		//Semaphore to coordinate the 2 box office agents in parallel
 sem_t ticketReady;		//Semaphore to signal that ticket is ready to tear
 
 /********* Semeaphore Queues *********/
+
 struct agentNode //This queue represents the line for the customers at the box office
 {
 	int ID;
@@ -68,7 +69,7 @@ int isTheaterOpen = 0;	//Used to signal if the theater is ready for business
 int movieCounter = 0;	//Counts the number of movies read from movies.txt
 char **movieTitles; 	//Char ** to hold movie titles
 int *ticketCount; 		//int * to hold ticket counts to movie titles.
-int indexes[MAX_CUSTOMERS]; 	//Array to respresent each customer and the movie that they bought.
+int movieIdxs[MAX_CUSTOMERS]; 	//Array to respresent each customer and the movie that they bought.
 int shouldExit[MAX_CUSTOMERS]; 	//Array to signal if a customer should go home if the movie
 								//is sold out.
 
@@ -310,12 +311,12 @@ int dequeueStand(char **food)
  *
  * Return: title - movie title
  ***************************************************/
-char* purchase(int custID)
+char* ticketOrder(int custID)
 {
 	char *title = NULL;
-	int randIdx = rand() % (movieCounter - 1);
-	indexes[custID] = randIdx;
-	title = movieTitles[randIdx];
+	int idx = rand() % (movieCounter - 1);
+	movieIdxs[custID] = idx;
+	title = movieTitles[idx];
 	return title;
 }
 
@@ -330,10 +331,10 @@ char* purchase(int custID)
 void sellTicket(int agentID, char *title, int id)
 {
 	sleep(90/60); //Sleep for 90/60 seconds to sell the ticket with time constraints
-	if (ticketCount[indexes[id]] > 0)
+	if (ticketCount[movieIdxs[id]] > 0)
 	{
 		printf("Box office agent %d sold ticket for %s to customer %d\n", agentID, title, id);
-		(ticketCount[indexes[id]])--;
+		(ticketCount[movieIdxs[id]])--;
 	}
 	else
 	{
@@ -376,6 +377,7 @@ char* enterCStand(int id)
 	int idx = (int)rand() % NUM_ITEMS;
 	char *food;
 	
+	/* If NUM_ITEMS changes, this switch will need to be modified accordingly */
 	switch(idx)
 	{
 		case 0:
@@ -395,9 +397,7 @@ char* enterCStand(int id)
 		}
 	}
 	printf("Customer %d in line to buy %s.\n", id, food);
-	
-	/* Check to see if freeing memory here later will mess up the program */
-	
+		
 	return food;
 }
 
@@ -441,7 +441,7 @@ void* Customer(void *custID)
 	
 	sem_post(&theaterOpen);	
 	
-	char *title = purchase(id);
+	char *title = ticketOrder(id);
 	printf("Customer %d created, buying ticket to %s\n", id, title);
 
 	/* Enqueue the customer so that he may communicate to the box office agent
@@ -449,13 +449,12 @@ void* Customer(void *custID)
 	sem_wait(&aMutex);
 	enqueueAgent(id, title);	//Enqueue the customer ID to communicate to the agent
 								//That the customer is ordering tickets.
-	sem_post(&ticketOrdered);	//Tell the box office agent that the customer has bought a ticket
+	sem_post(&ticketOrdered);	//Tell the box office agent that the customer has ordered a ticket
 	sem_post(&aMutex);
 	
-	sem_wait(&boughtTicket[id]); 	//Wait for the agent to signal that the ticket has been bought.
+	sem_wait(&boughtTicket[id]); 	//Wait for the agent to signal that the ticket has been processed.
 	if (shouldExit[id])	   	   		//Check to see if the ticket was sold out.
 	{
-		printf("Customer %d is going home.\n", id);
 		pthread_exit(NULL);
 	}
 	
@@ -484,6 +483,7 @@ void* Customer(void *custID)
 		 sem_wait(&orderTaken[id]);
 	 }
 	 
+	 /* The customer now enteres to see their movie */
 	 printf("Customer %d enters the theater to see %s.\n", id, title);
 
 	pthread_exit(NULL);	
@@ -515,14 +515,13 @@ void* BoxOfficeAgent(void *agentID)
 		
 		sem_wait(&aMutex);
 		char *title;
-		int id = dequeueAgent(&title); //Dequeue customer to receive his id
+		int id = dequeueAgent(&title); //Dequeue customer to receive his id and title of movie
 		sem_post(&aMutex);
 		
 		/* Allow 2 agents to sell tickets at once */
 		sem_wait(&agentCoord);
 		printf("Box office agent %d serving customer %d\n", (int) agentID, id);
 		sellTicket((int) agentID, title, id); //Sell a ticket
-
 		sem_post(&agentCoord); 		 //Let the next agent know he can sell the next ticket
 		sem_post(&boughtTicket[id]); //Signal to the agent that he has been processed.
 	}
@@ -553,8 +552,7 @@ void* TicketTaker(void *takerID)
 		sem_wait(&ticketReady);
 		
 		sem_wait(&tMutex);
-		char *food;
-		int id = dequeueTaker(&food); //Dequeue customer to receive his id and food
+		int id = dequeueTaker(); //Dequeue customer to receive his id
 		sem_post(&tMutex);
 		tearTicket(id);
 		
@@ -588,7 +586,7 @@ void* ConcessionStandWorker(void *workerID)
 		
 		sem_wait(&sMutex);
 		char *food;
-		int id = dequeueStand(&food);
+		int id = dequeueStand(&food); //dequeue customer to receive his id and food
 		sem_post(&sMutex);
 		
 		printf("Order for %s taken from customer %d\n", food, id);
@@ -638,6 +636,7 @@ void initAllSems()
 	initSems(&sMutex, 1);
 	initSems(&agentCoord, 2);
 	initSems(&fOrderReady, 0);
+	initSems(&ticketReady, 0);
 	for (i = 0; i < MAX_CUSTOMERS; i++)
 	{
 		initSems(&orderTaken[i], 0);
@@ -768,7 +767,7 @@ void parseFile(FILE **file, char ***movieTitles, int **ticketCount)
 /********* Beginning main function *********/
 int main(int argc, char **argv)
 {	
-	int i, j;		//Loop Counter
+	int i;			//Loop Counter
 	int rc; 		//Error checker for threads
 	void *status; 	//Status of joins
 	FILE *file;		//Pointer to movies.txt file
@@ -796,7 +795,7 @@ int main(int argc, char **argv)
 
 	/* First create customer threads, then create employee threads 
 	 * I would create functions for these procedures, but have been lazy */
-	 	for (i = 0; i < MAX_CUSTOMERS; i++)
+	for (i = 0; i < MAX_CUSTOMERS; i++)
 	{
 		rc = pthread_create(&customers[i], NULL, Customer, (void *) i);
 		checkThreadError(rc);
