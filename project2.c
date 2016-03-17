@@ -22,12 +22,12 @@ sem_t createdAgent; //Semaphore for agent creation
 sem_t createdTaker; //Semaphore for ticket taker creaton
 sem_t theaterOpen;  //Semaphore to signal that the theater has opened
 sem_t boughtTicket[MAX_CUSTOMERS]; 	//Array of semaphores to signal that a customer has bought
-									//a movie
+					//a movie
 sem_t toreTicket[MAX_CUSTOMERS];	//Array of semaphores to signal that the ticket taker
-									//has taken a customer's ticket and tore it
+					//has taken a customer's ticket and tore it
 sem_t orderTaken[MAX_CUSTOMERS];	//Array of semaphores to signal that the concession
-									//stand worker has taken a customers order and filled it
-sem_t ticketOrdered; 	//Semphore to signal that the customer has ordered a movie ticket
+					//stand worker has taken a customers order and filled it
+sem_t ticketOrdered; 		//Semphore to signal that the customer has ordered a movie ticket
 sem_t fOrderReady;		//Semaphore to signal that a customer has ordered food
 sem_t aMutex, tMutex, sMutex;	//Mutexes for queues
 sem_t agentCoord;		//Semaphore to coordinate the 2 box office agents in parallel
@@ -71,7 +71,7 @@ char **movieTitles; 	//Char ** to hold movie titles
 int *ticketCount; 		//int * to hold ticket counts to movie titles.
 int movieIdxs[MAX_CUSTOMERS]; 	//Array to respresent each customer and the movie that they bought.
 int shouldExit[MAX_CUSTOMERS]; 	//Array to signal if a customer should go home if the movie
-								//is sold out.
+				//is sold out.
 
 /********* Queue Functions *********/
 
@@ -331,7 +331,7 @@ char* ticketOrder(int custID)
 void sellTicket(int agentID, char *title, int id)
 {
 	sleep(90/60); //Sleep for 90/60 seconds to sell the ticket with time constraints
-	if (ticketCount[movieIdxs[id]] > 0)
+	if (ticketCount[movieIdxs[id]] > 0)	//Check to see if the movie is sold out
 	{
 		printf("Box office agent %d sold ticket for %s to customer %d\n", agentID, title, id);
 		(ticketCount[movieIdxs[id]])--;
@@ -448,12 +448,12 @@ void* Customer(void *custID)
 	 * the information of his movie and his ID */
 	sem_wait(&aMutex);
 	enqueueAgent(id, title);	//Enqueue the customer ID to communicate to the agent
-								//That the customer is ordering tickets.
+					//that the customer is ordering tickets.
 	sem_post(&ticketOrdered);	//Tell the box office agent that the customer has ordered a ticket
 	sem_post(&aMutex);
 	
 	sem_wait(&boughtTicket[id]); 	//Wait for the agent to signal that the ticket has been processed.
-	if (shouldExit[id])	   	   		//Check to see if the ticket was sold out.
+	if (shouldExit[id])	   	//Check to see if the ticket was sold out.
 	{
 		pthread_exit(NULL);
 	}
@@ -522,8 +522,8 @@ void* BoxOfficeAgent(void *agentID)
 		sem_wait(&agentCoord);
 		printf("Box office agent %d serving customer %d\n", (int) agentID, id);
 		sellTicket((int) agentID, title, id); //Sell a ticket
-		sem_post(&agentCoord); 		 //Let the next agent know he can sell the next ticket
-		sem_post(&boughtTicket[id]); //Signal to the agent that he has been processed.
+		sem_post(&agentCoord);		//Let the next agent know he can sell the next ticket
+		sem_post(&boughtTicket[id]);	//Signal to the agent that he has been processed.
 	}
 
 	pthread_exit(NULL);
@@ -769,7 +769,7 @@ int main(int argc, char **argv)
 {	
 	int i;			//Loop Counter
 	int rc; 		//Error checker for threads
-	void *status; 	//Status of joins
+	void *status; 		//Status of joins
 	FILE *file;		//Pointer to movies.txt file
 	movieTitles = (char **) malloc(DEF_ARR_S*sizeof(char *)); 
 	ticketCount = (int *) malloc (DEF_ARR_S*sizeof(int));

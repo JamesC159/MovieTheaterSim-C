@@ -1,0 +1,430 @@
+RUN 1
+
+{cslinux1:~/operating_systems/project2} ./driver
+Box office agent 0 created
+Box office agent 1 created
+Ticket taker 0 created
+Concession stand worker 0 created
+The theater is now open!
+Customer 0 created, buying ticket to Finding Nemo
+Customer 1 created, buying ticket to Alice in Wonderland
+Customer 2 created, buying ticket to Alice in Wonderland
+Customer 4 created, buying ticket to Finding Nemo
+Customer 3 created, buying ticket to Finding Nemo
+Customer 5 created, buying ticket to 101 Dalmatians
+Customer 6 created, buying ticket to Beauty and the Beast
+Customer 7 created, buying ticket to Alice in Wonderland
+Customer 8 created, buying ticket to 101 Dalmatians
+Box office agent 0 serving customer 0
+Box office agent 1 serving customer 5
+Customer 9 created, buying ticket to Alice in Wonderland
+Customer 10 created, buying ticket to 101 Dalmatians
+Customer 11 created, buying ticket to Alice in Wonderland
+Customer 13 created, buying ticket to Toy Story
+Customer 12 created, buying ticket to Finding Nemo
+Customer 15 created, buying ticket to Finding Nemo
+Customer 14 created, buying ticket to Toy Story
+Customer 17 created, buying ticket to 101 Dalmatians
+Customer 16 created, buying ticket to Toy Story
+Customer 19 created, buying ticket to Alice in Wonderland
+Customer 18 created, buying ticket to Finding Nemo
+Customer 20 created, buying ticket to Toy Story
+Customer 21 created, buying ticket to Finding Nemo
+Customer 22 created, buying ticket to Alice in Wonderland
+Customer 23 created, buying ticket to Alice in Wonderland
+Customer 24 created, buying ticket to Alice in Wonderland
+Customer 25 created, buying ticket to 101 Dalmatians
+Customer 26 created, buying ticket to Beauty and the Beast
+Customer 28 created, buying ticket to Beauty and the Beast
+Customer 27 created, buying ticket to Alice in Wonderland
+Customer 29 created, buying ticket to Toy Story
+Customer 30 created, buying ticket to Finding Nemo
+Customer 31 created, buying ticket to Toy Story
+Customer 32 created, buying ticket to 101 Dalmatians
+Customer 33 created, buying ticket to Finding Nemo
+Customer 34 created, buying ticket to Beauty and the Beast
+Customer 35 created, buying ticket to 101 Dalmatians
+Customer 36 created, buying ticket to Finding Nemo
+Customer 37 created, buying ticket to Toy Story
+Customer 38 created, buying ticket to Alice in Wonderland
+Customer 39 created, buying ticket to Alice in Wonderland
+Customer 40 created, buying ticket to Finding Nemo
+Customer 41 created, buying ticket to Alice in Wonderland
+Customer 42 created, buying ticket to Beauty and the Beast
+Customer 43 created, buying ticket to Beauty and the Beast
+Customer 45 created, buying ticket to Beauty and the Beast
+Customer 44 created, buying ticket to 101 Dalmatians
+Customer 46 created, buying ticket to Toy Story
+Customer 49 created, buying ticket to Beauty and the Beast
+Customer 48 created, buying ticket to Alice in Wonderland
+Customer 47 created, buying ticket to 101 Dalmatians
+Box office agent 0 sold ticket for Finding Nemo to customer 0
+Box office agent 0 serving customer 2
+Box office agent 1 sold ticket for 101 Dalmatians to customer 5
+Box office agent 1 serving customer 4
+Customer 0 joined with status 0
+Box office agent 0 sold ticket for Alice in Wonderland to customer 2
+Box office agent 0 serving customer 3
+Box office agent 1 sold ticket for Finding Nemo to customer 4
+Box office agent 1 serving customer 1
+Box office agent 0 sold ticket for Finding Nemo to customer 3
+Box office agent 0 serving customer 6
+Box office agent 1 sold ticket for Alice in Wonderland to customer 1
+Box office agent 1 serving customer 13
+Customer 1 joined with status 0
+Customer 2 joined with status 0
+Customer 3 joined with status 0
+Customer 4 joined with status 0
+Customer 5 joined with status 0
+Box office agent 0 sold ticket for Beauty and the Beast to customer 6
+Box office agent 0 serving customer 8
+Customer 6 joined with status 0
+Box office agent 1 sold ticket for Toy Story to customer 13
+Box office agent 1 serving customer 9
+Box office agent 0 sold ticket for 101 Dalmatians to customer 8
+Box office agent 0 serving customer 10
+Box office agent 1 sold ticket for Alice in Wonderland to customer 9
+Box office agent 1 serving customer 11
+Box office agent 0 sold ticket for 101 Dalmatians to customer 10
+Box office agent 0 serving customer 7
+Box office agent 1 sold ticket for Alice in Wonderland to customer 11
+Box office agent 1 serving customer 12
+Box office agent 0 sold ticket for Alice in Wonderland to customer 7
+Box office agent 0 serving customer 15
+Customer 7 joined with status 0
+Customer 8 joined with status 0
+Customer 9 joined with status 0
+Customer 10 joined with status 0
+Customer 11 joined with status 0
+Box office agent 1 sold ticket for Finding Nemo to customer 12
+Box office agent 1 serving customer 24
+Customer 12 joined with status 0
+Customer 13 joined with status 0
+Box office agent 0 sold ticket for Finding Nemo to customer 15
+Box office agent 0 serving customer 17
+Box office agent 1 sold ticket for Alice in Wonderland to customer 24
+Box office agent 1 serving customer 26
+Box office agent 0 sold ticket for 101 Dalmatians to customer 17
+Box office agent 0 serving customer 28
+Box office agent 1 sold ticket for Beauty and the Beast to customer 26
+Box office agent 1 serving customer 18
+Box office agent 0 sold ticket for Beauty and the Beast to customer 28
+Box office agent 0 serving customer 20
+Box office agent 1 sold ticket for Finding Nemo to customer 18
+Box office agent 1 serving customer 31
+Box office agent 0 sold ticket for Toy Story to customer 20
+Box office agent 0 serving customer 32
+Box office agent 1 sold ticket for Toy Story to customer 31
+Box office agent 1 serving customer 35
+Box office agent 0 sold ticket for 101 Dalmatians to customer 32
+Box office agent 0 serving customer 36
+Box office agent 1 sold ticket for 101 Dalmatians to customer 35
+Box office agent 1 serving customer 14
+Box office agent 0 sold ticket for Finding Nemo to customer 36
+Box office agent 0 serving customer 16
+Box office agent 1 sold ticket for Toy Story to customer 14
+Box office agent 1 serving customer 42
+Customer 14 joined with status 0
+Customer 15 joined with status 0
+Box office agent 0 sold ticket for Toy Story to customer 16
+Box office agent 0 serving customer 27
+Customer 16 joined with status 0
+Customer 17 joined with status 0
+Customer 18 joined with status 0
+Box office agent 1 sold ticket for Beauty and the Beast to customer 42
+Box office agent 1 serving customer 49
+Box office agent 0 sold ticket for Alice in Wonderland to customer 27
+Box office agent 0 serving customer 30
+Box office agent 1 sold ticket for Beauty and the Beast to customer 49
+Box office agent 1 serving customer 47
+Box office agent 0 sold ticket for Finding Nemo to customer 30
+Box office agent 0 serving customer 21
+Box office agent 1 sold ticket for 101 Dalmatians to customer 47
+Box office agent 1 serving customer 33
+Box office agent 0 sold ticket for Finding Nemo to customer 21
+Box office agent 0 serving customer 22
+Box office agent 1 sold ticket for Finding Nemo to customer 33
+Box office agent 1 serving customer 23
+Box office agent 0 sold ticket for Alice in Wonderland to customer 22
+Box office agent 0 serving customer 37
+Box office agent 1 sold ticket for Alice in Wonderland to customer 23
+Box office agent 1 serving customer 25
+Box office agent 0 sold ticket for Toy Story to customer 37
+Box office agent 0 serving customer 38
+Box office agent 1 sold ticket for 101 Dalmatians to customer 25
+Box office agent 1 serving customer 39
+Box office agent 0 sold ticket for Alice in Wonderland to customer 38
+Box office agent 0 serving customer 40
+Movie Alice in Wonderland is sold out.
+Box office agent 1 serving customer 41
+Customer 39 is going home.
+Movie Finding Nemo is sold out.
+Box office agent 0 serving customer 43
+Customer 40 is going home.
+Movie Alice in Wonderland is sold out.
+Box office agent 1 serving customer 19
+Customer 41 is going home.
+Box office agent 0 sold ticket for Beauty and the Beast to customer 43
+Box office agent 0 serving customer 45
+Movie Alice in Wonderland is sold out.
+Box office agent 1 serving customer 44
+Customer 19 is going home.
+Customer 19 joined with status 0
+Customer 20 joined with status 0
+Customer 21 joined with status 0
+Customer 22 joined with status 0
+Customer 23 joined with status 0
+Customer 24 joined with status 0
+Customer 25 joined with status 0
+Customer 26 joined with status 0
+Customer 27 joined with status 0
+Customer 28 joined with status 0
+Box office agent 0 sold ticket for Beauty and the Beast to customer 45
+Box office agent 0 serving customer 46
+Box office agent 1 sold ticket for 101 Dalmatians to customer 44
+Box office agent 1 serving customer 29
+Box office agent 0 sold ticket for Toy Story to customer 46
+Box office agent 0 serving customer 48
+Box office agent 1 sold ticket for Toy Story to customer 29
+Box office agent 1 serving customer 34
+Customer 29 joined with status 0
+Customer 30 joined with status 0
+Customer 31 joined with status 0
+Customer 32 joined with status 0
+Customer 33 joined with status 0
+Movie Alice in Wonderland is sold out.
+Customer 48 is going home.
+Box office agent 1 sold ticket for Beauty and the Beast to customer 34
+Customer 34 joined with status 0
+Customer 35 joined with status 0
+Customer 36 joined with status 0
+Customer 37 joined with status 0
+Customer 38 joined with status 0
+Customer 39 joined with status 0
+Customer 40 joined with status 0
+Customer 41 joined with status 0
+Customer 42 joined with status 0
+Customer 43 joined with status 0
+Customer 44 joined with status 0
+Customer 45 joined with status 0
+Customer 46 joined with status 0
+Customer 47 joined with status 0
+Customer 48 joined with status 0
+Customer 49 joined with status 0
+{cslinux1:~/operating_systems/project2} 
+
+
+RUN 2
+
+{cslinux1:~/operating_systems/project2} ./driver
+Box office agent 0 created
+Box office agent 1 created
+Ticket taker 0 created
+Concession stand worker 0 created
+The theater is now open!
+Customer 0 created, buying ticket to Finding Nemo
+Customer 1 created, buying ticket to Alice in Wonderland
+Customer 2 created, buying ticket to Alice in Wonderland
+Customer 4 created, buying ticket to Finding Nemo
+Customer 3 created, buying ticket to Finding Nemo
+Customer 5 created, buying ticket to 101 Dalmatians
+Customer 6 created, buying ticket to Beauty and the Beast
+Customer 7 created, buying ticket to Alice in Wonderland
+Customer 8 created, buying ticket to 101 Dalmatians
+Box office agent 0 serving customer 0
+Box office agent 1 serving customer 5
+Customer 9 created, buying ticket to Alice in Wonderland
+Customer 10 created, buying ticket to 101 Dalmatians
+Customer 11 created, buying ticket to Alice in Wonderland
+Customer 13 created, buying ticket to Toy Story
+Customer 12 created, buying ticket to Finding Nemo
+Customer 15 created, buying ticket to Finding Nemo
+Customer 14 created, buying ticket to Toy Story
+Customer 17 created, buying ticket to 101 Dalmatians
+Customer 16 created, buying ticket to Toy Story
+Customer 19 created, buying ticket to Alice in Wonderland
+Customer 18 created, buying ticket to Finding Nemo
+Customer 20 created, buying ticket to Toy Story
+Customer 21 created, buying ticket to Finding Nemo
+Customer 22 created, buying ticket to Alice in Wonderland
+Customer 23 created, buying ticket to Alice in Wonderland
+Customer 24 created, buying ticket to Alice in Wonderland
+Customer 25 created, buying ticket to 101 Dalmatians
+Customer 26 created, buying ticket to Beauty and the Beast
+Customer 28 created, buying ticket to Beauty and the Beast
+Customer 27 created, buying ticket to Alice in Wonderland
+Customer 29 created, buying ticket to Toy Story
+Customer 30 created, buying ticket to Finding Nemo
+Customer 31 created, buying ticket to Toy Story
+Customer 32 created, buying ticket to 101 Dalmatians
+Customer 33 created, buying ticket to Finding Nemo
+Customer 34 created, buying ticket to Beauty and the Beast
+Customer 35 created, buying ticket to 101 Dalmatians
+Customer 36 created, buying ticket to Finding Nemo
+Customer 37 created, buying ticket to Toy Story
+Customer 38 created, buying ticket to Alice in Wonderland
+Customer 39 created, buying ticket to Alice in Wonderland
+Customer 40 created, buying ticket to Finding Nemo
+Customer 41 created, buying ticket to Alice in Wonderland
+Customer 42 created, buying ticket to Beauty and the Beast
+Customer 43 created, buying ticket to Beauty and the Beast
+Customer 45 created, buying ticket to Beauty and the Beast
+Customer 44 created, buying ticket to 101 Dalmatians
+Customer 46 created, buying ticket to Toy Story
+Customer 49 created, buying ticket to Beauty and the Beast
+Customer 48 created, buying ticket to Alice in Wonderland
+Customer 47 created, buying ticket to 101 Dalmatians
+Box office agent 0 sold ticket for Finding Nemo to customer 0
+Box office agent 0 serving customer 2
+Box office agent 1 sold ticket for 101 Dalmatians to customer 5
+Box office agent 1 serving customer 4
+Customer 0 joined with status 0
+Box office agent 0 sold ticket for Alice in Wonderland to customer 2
+Box office agent 0 serving customer 3
+Box office agent 1 sold ticket for Finding Nemo to customer 4
+Box office agent 1 serving customer 1
+Box office agent 0 sold ticket for Finding Nemo to customer 3
+Box office agent 0 serving customer 6
+Box office agent 1 sold ticket for Alice in Wonderland to customer 1
+Box office agent 1 serving customer 13
+Customer 1 joined with status 0
+Customer 2 joined with status 0
+Customer 3 joined with status 0
+Customer 4 joined with status 0
+Customer 5 joined with status 0
+Box office agent 0 sold ticket for Beauty and the Beast to customer 6
+Box office agent 0 serving customer 8
+Customer 6 joined with status 0
+Box office agent 1 sold ticket for Toy Story to customer 13
+Box office agent 1 serving customer 9
+Box office agent 0 sold ticket for 101 Dalmatians to customer 8
+Box office agent 0 serving customer 10
+Box office agent 1 sold ticket for Alice in Wonderland to customer 9
+Box office agent 1 serving customer 11
+Box office agent 0 sold ticket for 101 Dalmatians to customer 10
+Box office agent 0 serving customer 7
+Box office agent 1 sold ticket for Alice in Wonderland to customer 11
+Box office agent 1 serving customer 12
+Box office agent 0 sold ticket for Alice in Wonderland to customer 7
+Box office agent 0 serving customer 15
+Customer 7 joined with status 0
+Customer 8 joined with status 0
+Customer 9 joined with status 0
+Customer 10 joined with status 0
+Customer 11 joined with status 0
+Box office agent 1 sold ticket for Finding Nemo to customer 12
+Box office agent 1 serving customer 24
+Customer 12 joined with status 0
+Customer 13 joined with status 0
+Box office agent 0 sold ticket for Finding Nemo to customer 15
+Box office agent 0 serving customer 17
+Box office agent 1 sold ticket for Alice in Wonderland to customer 24
+Box office agent 1 serving customer 26
+Box office agent 0 sold ticket for 101 Dalmatians to customer 17
+Box office agent 0 serving customer 28
+Box office agent 1 sold ticket for Beauty and the Beast to customer 26
+Box office agent 1 serving customer 18
+Box office agent 0 sold ticket for Beauty and the Beast to customer 28
+Box office agent 0 serving customer 20
+Box office agent 1 sold ticket for Finding Nemo to customer 18
+Box office agent 1 serving customer 31
+Box office agent 0 sold ticket for Toy Story to customer 20
+Box office agent 0 serving customer 32
+Box office agent 1 sold ticket for Toy Story to customer 31
+Box office agent 1 serving customer 35
+Box office agent 0 sold ticket for 101 Dalmatians to customer 32
+Box office agent 0 serving customer 36
+Box office agent 1 sold ticket for 101 Dalmatians to customer 35
+Box office agent 1 serving customer 14
+Box office agent 0 sold ticket for Finding Nemo to customer 36
+Box office agent 0 serving customer 16
+Box office agent 1 sold ticket for Toy Story to customer 14
+Box office agent 1 serving customer 42
+Customer 14 joined with status 0
+Customer 15 joined with status 0
+Box office agent 0 sold ticket for Toy Story to customer 16
+Box office agent 0 serving customer 27
+Customer 16 joined with status 0
+Customer 17 joined with status 0
+Customer 18 joined with status 0
+Box office agent 1 sold ticket for Beauty and the Beast to customer 42
+Box office agent 1 serving customer 49
+Box office agent 0 sold ticket for Alice in Wonderland to customer 27
+Box office agent 0 serving customer 30
+Box office agent 1 sold ticket for Beauty and the Beast to customer 49
+Box office agent 1 serving customer 47
+Box office agent 0 sold ticket for Finding Nemo to customer 30
+Box office agent 0 serving customer 21
+Box office agent 1 sold ticket for 101 Dalmatians to customer 47
+Box office agent 1 serving customer 33
+Box office agent 0 sold ticket for Finding Nemo to customer 21
+Box office agent 0 serving customer 22
+Box office agent 1 sold ticket for Finding Nemo to customer 33
+Box office agent 1 serving customer 23
+Box office agent 0 sold ticket for Alice in Wonderland to customer 22
+Box office agent 0 serving customer 37
+Box office agent 1 sold ticket for Alice in Wonderland to customer 23
+Box office agent 1 serving customer 25
+Box office agent 0 sold ticket for Toy Story to customer 37
+Box office agent 0 serving customer 38
+Box office agent 1 sold ticket for 101 Dalmatians to customer 25
+Box office agent 1 serving customer 39
+Box office agent 0 sold ticket for Alice in Wonderland to customer 38
+Box office agent 0 serving customer 40
+Movie Alice in Wonderland is sold out.
+Box office agent 1 serving customer 41
+Customer 39 is going home.
+Movie Finding Nemo is sold out.
+Box office agent 0 serving customer 43
+Customer 40 is going home.
+Movie Alice in Wonderland is sold out.
+Box office agent 1 serving customer 19
+Customer 41 is going home.
+Box office agent 0 sold ticket for Beauty and the Beast to customer 43
+Box office agent 0 serving customer 45
+Movie Alice in Wonderland is sold out.
+Box office agent 1 serving customer 44
+Customer 19 is going home.
+Customer 19 joined with status 0
+Customer 20 joined with status 0
+Customer 21 joined with status 0
+Customer 22 joined with status 0
+Customer 23 joined with status 0
+Customer 24 joined with status 0
+Customer 25 joined with status 0
+Customer 26 joined with status 0
+Customer 27 joined with status 0
+Customer 28 joined with status 0
+Box office agent 0 sold ticket for Beauty and the Beast to customer 45
+Box office agent 0 serving customer 46
+Box office agent 1 sold ticket for 101 Dalmatians to customer 44
+Box office agent 1 serving customer 29
+Box office agent 0 sold ticket for Toy Story to customer 46
+Box office agent 0 serving customer 48
+Box office agent 1 sold ticket for Toy Story to customer 29
+Box office agent 1 serving customer 34
+Customer 29 joined with status 0
+Customer 30 joined with status 0
+Customer 31 joined with status 0
+Customer 32 joined with status 0
+Customer 33 joined with status 0
+Movie Alice in Wonderland is sold out.
+Customer 48 is going home.
+Box office agent 1 sold ticket for Beauty and the Beast to customer 34
+Customer 34 joined with status 0
+Customer 35 joined with status 0
+Customer 36 joined with status 0
+Customer 37 joined with status 0
+Customer 38 joined with status 0
+Customer 39 joined with status 0
+Customer 40 joined with status 0
+Customer 41 joined with status 0
+Customer 42 joined with status 0
+Customer 43 joined with status 0
+Customer 44 joined with status 0
+Customer 45 joined with status 0
+Customer 46 joined with status 0
+Customer 47 joined with status 0
+Customer 48 joined with status 0
+Customer 49 joined with status 0
+{cslinux1:~/operating_systems/project2} 
